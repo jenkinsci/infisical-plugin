@@ -10,7 +10,7 @@
   </f:entry>
 
   <f:entry>
-    <f:repeatableProperty field="secretValues" minimum="1" add="Add a key/value pair"/>
+    <f:repeatableProperty field="secretValues" minimum="1" add="Add key/value pair"/>
   </f:entry>
 
   <f:entry title="">
