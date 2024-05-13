@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>Jenkins plugin to populate environment variables from secrets stored in Infisical
+  <a href="https://infisical.com">Infisical</a>
+</div>

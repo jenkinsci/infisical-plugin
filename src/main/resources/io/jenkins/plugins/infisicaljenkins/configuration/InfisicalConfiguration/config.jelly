@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+  <f:entry field="infisicalUrl" title="Infisical URL">
+    <f:textbox name="infisicalUrl" default="${descriptor.DEFAULT_INFISICAL_URL}"/>
+  </f:entry>
+
+  <f:entry title="Infisical Credential" field="infisicalCredentialId">
+    <c:select/>
+  </f:entry>
+
+  <f:entry field="infisicalProjectSlug" title="Infisical Project Slug">
+    <f:textbox name="infisicalProjectSlug" placeholder="test-project-fb-2a"/>
+  </f:entry>
+
+  <f:entry field="infisicalEnvironmentSlug" title="Environment Slug">
+    <f:textbox name="infisicalEnvironmentSlug" placeholder="dev, staging, prod"/>
+  </f:entry>
+</j:jelly>
