@@ -18,12 +18,16 @@ public class InfisicalSecret extends AbstractDescribableImpl<InfisicalSecret> {
   @DataBoundConstructor
   public InfisicalSecret(String path, boolean includeImports, List<InfisicalSecretValue> secretValues) {
 
-    if (path == "" || path == null) {
+    if (path == null || path.isEmpty()) {
       path = DescriptorImpl.DEFAULT_PATH;
     }
 
     this.includeImports = includeImports;
     this.path = fixEmptyAndTrim(path);
+
+    if (this.path == null) {
+      this.path = DescriptorImpl.DEFAULT_PATH;
+    }
 
     // if path doesn't start with / prepend it with /
     if (!this.path.startsWith("/")) {

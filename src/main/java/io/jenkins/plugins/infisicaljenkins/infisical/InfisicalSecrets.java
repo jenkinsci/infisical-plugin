@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -19,6 +19,7 @@ import io.jenkins.plugins.infisicaljenkins.credentials.InfisicalCredential;
 import io.jenkins.plugins.infisicaljenkins.exception.InfisicalPluginException;
 import io.jenkins.plugins.infisicaljenkins.model.SingleSecretResponse;
 import io.jenkins.plugins.infisicaljenkins.model.SecretResponseWrapper;
+import io.jenkins.plugins.infisicaljenkins.model.SingleImportResponse;
 
 public class InfisicalSecrets implements Serializable {
 
@@ -60,16 +61,24 @@ public class InfisicalSecrets implements Serializable {
       if (responseCode == HttpURLConnection.HTTP_OK) { // HTTP_OK is 200
         // Read the response using Gson
         Gson gson = new Gson();
-        SecretResponseWrapper response = gson.fromJson(new InputStreamReader(connection.getInputStream()),
+        SecretResponseWrapper response = gson.fromJson(
+            new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
             SecretResponseWrapper.class);
 
-        if (response == null || response.secrets == null) {
+        if (response == null) {
           throw new InfisicalPluginException("Failed to fetch secrets from Infisical, got null response");
         }
 
-        if (includeImports && response.imports != null && !response.imports.isEmpty()) {
+        List<SingleImportResponse> imports = response.getImports();
+        List<SingleSecretResponse> secrets = response.getSecrets();
 
-          response.imports.forEach(importedSecret -> {
+        if (secrets == null || (includeImports && imports == null)) {
+          throw new InfisicalPluginException("Failed to fetch secrets from Infisical, secrets and/or imports are null");
+        }
+
+        if (includeImports && imports != null && !imports.isEmpty()) {
+
+          imports.forEach(importedSecret -> {
             try {
               List<SingleSecretResponse> importedSecrets = importedSecret.getSecrets();
 
@@ -77,13 +86,13 @@ public class InfisicalSecrets implements Serializable {
               // name. In other terms, the keys should be unique.
               // The imported secrets should take precedence over the existing secrets.
               importedSecrets.forEach(importedSecretResponse -> {
-                if (response.secrets.stream()
+                if (secrets.stream()
                     .anyMatch(secret -> secret.getSecretKey().equals(importedSecretResponse.getSecretKey()))) {
-                  response.secrets
+                  secrets
                       .removeIf(secret -> secret.getSecretKey().equals(importedSecretResponse.getSecretKey()));
                 }
 
-                response.secrets.add(importedSecretResponse);
+                secrets.add(importedSecretResponse);
               });
 
             } catch (InfisicalPluginException e) {
@@ -93,7 +102,7 @@ public class InfisicalSecrets implements Serializable {
 
         }
 
-        return response.secrets;
+        return secrets;
 
       } else {
         throw new InfisicalPluginException("Failed to fetch secrets. HTTP error code: " + responseCode);

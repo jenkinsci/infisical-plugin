@@ -67,7 +67,7 @@ public class InfisicalAccessor implements Serializable {
     List<SingleSecretResponse> allSecretsInPath = InfisicalSecrets.getSecrets(configuration, this.credential,
         infisicalSecret.getPath(), infisicalSecret.getIncludeImports(), logger);
 
-    logger.printf("Found %d secrets in path: %s\n", allSecretsInPath.size(), infisicalSecret.getPath());
+    logger.printf("Found %d secrets in path: %s%n", allSecretsInPath.size(), infisicalSecret.getPath());
 
     // Create a key-secret map for fast(er) lookup
     Map<String, SingleSecretResponse> map = new HashMap<>();
