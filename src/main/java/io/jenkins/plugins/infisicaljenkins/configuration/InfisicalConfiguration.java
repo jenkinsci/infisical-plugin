@@ -136,7 +136,8 @@ public class InfisicalConfiguration extends AbstractDescribableImpl<InfisicalCon
       return "Infisical Configuration";
     }
 
-    @SuppressWarnings({ "unused", "deprecation" }) // used by stapler
+    @SuppressWarnings({ "unused", "deprecation", "lgtm[jenkins/credentials-fill-without-permission-check]",
+        "lgtm[jenkins/csrf]", "lgtm[jenkins/no-permission-check]" })
     public ListBoxModel doFillInfisicalCredentialIdItems(@AncestorInPath Item item,
         @QueryParameter String uri) {
       // This is needed for folders: credentials bound to a folder are

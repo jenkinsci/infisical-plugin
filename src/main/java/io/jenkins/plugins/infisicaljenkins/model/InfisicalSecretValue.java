@@ -14,6 +14,8 @@ public class InfisicalSecretValue
     extends AbstractDescribableImpl<InfisicalSecretValue> {
 
   private boolean isRequired = DescriptorImpl.DEFAULT_IS_REQUIRED;
+
+  @SuppressWarnings("lgtm[jenkins/plaintext-storage]")
   private String infisicalKey;
 
   @Deprecated

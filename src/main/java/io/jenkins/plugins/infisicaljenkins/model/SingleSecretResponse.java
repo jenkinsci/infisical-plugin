@@ -3,8 +3,12 @@ package io.jenkins.plugins.infisicaljenkins.model;
 public class SingleSecretResponse {
 
   private String secretPath;
+
   private String id;
+
+  @SuppressWarnings("lgtm[jenkins/plaintext-storage]")
   private String secretKey;
+
   private String secretValue;
 
   public SingleSecretResponse(String secretKey, String secretValue, String secretPath, String id) {
