@@ -24,6 +24,8 @@ import java.util.Map;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 
 import jenkins.tasks.SimpleBuildWrapper;
+
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
@@ -65,6 +67,8 @@ public class InfisicalBuildWrapper extends SimpleBuildWrapper {
     // to fetch.
     if (infisicalSecrets != null) {
       provideEnvironmentVariablesFromInfisical(context, build, initialEnvironment);
+    } else {
+      logger.println("No secrets to fetch - skipping Infisical Plugin.");
     }
   }
 
@@ -119,6 +123,7 @@ public class InfisicalBuildWrapper extends SimpleBuildWrapper {
    * marked as public
    * so that it can be accessed from views.
    */
+  @Symbol("infisical")
   @Extension
   public static final class DescriptorImpl extends BuildWrapperDescriptor {
 
