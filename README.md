@@ -55,3 +55,54 @@ You start by specifying a [folder path from Infisical](https://infisical.com/doc
 
 If you wish to pull secrets from multiple paths, you can press the "Add an Infisical secret" button at the bottom, and configure a new set of secrets to pull.
 
+
+## Pipeline usage
+
+
+### Generating pipeline block
+
+Using the Infisical Plugin in a Jenkins pipeline is very straight forward. To generate a block to use the Infisical Plugin in a Pipeline, simply to go `{JENKINS_URL}/jenkins/job/{JOB_ID}/pipeline-syntax/`.
+
+You can find a direct link on the Pipeline configuration page in the very bottom of the page, see image below.
+
+![Pipeline Syntax Highlight](docs/images/pipeline-syntax-highlight.png)
+
+On the Snippet Generator page, simply configure the Infisical Plugin like it's documented in the [Configuration documentation](#configuration) step.
+
+Once you have filled out the configuration, press `Generate Pipeline Script`, and it will generate a block you can use in your pipeline.
+
+![Pipeline Configuration](docs/images/pipeline-configuration.png)
+
+### Using Infisical in a Pipeline
+
+Using the generated block in a pipeline is very straight forward. There's a few approaches on how to implement the block in a Pipeline script.
+Here's an example of using the generated block in a pipeline script. Make sure to replace the placeholder values with your own values.
+
+The script is formatted for clarity. All these fields will be pre-filled for you if you use the `Snippet Generator` like described in the [step above](#generating-pipeline-block).
+```groovy
+node {
+    infisical(
+        configuration: [
+            infisicalCredentialId: 'YOUR_CREDENTIAL_ID',
+            infisicalEnvironmentSlug: 'PROJECT_ENV_SLUG', 
+            infisicalProjectSlug: 'PROJECT_SLUG', 
+            infisicalUrl: 'https://app.infisical.com' // Change this to your Infisical instance URL if you aren't using Infisical Cloud.
+        ], 
+        infisicalSecrets: [
+            infisicalSecret(
+                includeImports: true, 
+                path: '/', 
+                secretValues: [
+                    [infisicalKey: 'DATABASE_URL'],
+                    [infisicalKey: "API_URL"],
+                    [infisicalKey: 'THIS_KEY_MIGHT_NOT_EXIST', isRequired: false],
+                ]
+            )
+        ]
+    ) {
+        // Code runs here
+        sh "printenv"
+    }     
+}
+```
+
