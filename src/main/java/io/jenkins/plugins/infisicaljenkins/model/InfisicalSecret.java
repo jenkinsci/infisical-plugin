@@ -4,6 +4,8 @@ import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import java.util.List;
+
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import static hudson.Util.fixEmptyAndTrim;
@@ -49,6 +51,7 @@ public class InfisicalSecret extends AbstractDescribableImpl<InfisicalSecret> {
     return this.secretValues;
   }
 
+  @Symbol("infisicalSecret")
   @Extension
   public static final class DescriptorImpl extends Descriptor<InfisicalSecret> {
 
