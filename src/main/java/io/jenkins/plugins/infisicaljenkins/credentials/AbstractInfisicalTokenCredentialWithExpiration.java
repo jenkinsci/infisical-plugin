@@ -5,7 +5,7 @@ import com.cloudbees.plugins.credentials.CredentialsScope;
 import java.util.logging.Logger;
 
 public abstract class AbstractInfisicalTokenCredentialWithExpiration
-    extends AbstractInfisicalTokenCredential {
+    extends AbstractInfisicalUniversalAuthCredential {
 
   protected final static Logger LOGGER = Logger
       .getLogger(AbstractInfisicalTokenCredentialWithExpiration.class.getName());
