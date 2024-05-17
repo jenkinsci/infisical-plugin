@@ -81,7 +81,7 @@ Here's an example of using the generated block in a pipeline script. Make sure t
 The script is formatted for clarity. All these fields will be pre-filled for you if you use the `Snippet Generator` like described in the [step above](#generating-pipeline-block).
 ```groovy
 node {
-    infisical(
+    withInfisical(
         configuration: [
             infisicalCredentialId: 'YOUR_CREDENTIAL_ID',
             infisicalEnvironmentSlug: 'PROJECT_ENV_SLUG', 

@@ -123,7 +123,7 @@ public class InfisicalBuildWrapper extends SimpleBuildWrapper {
    * marked as public
    * so that it can be accessed from views.
    */
-  @Symbol("infisical")
+  @Symbol("withInfisical")
   @Extension
   public static final class DescriptorImpl extends BuildWrapperDescriptor {
 
