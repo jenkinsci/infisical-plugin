@@ -14,6 +14,8 @@ public abstract class AbstractInfisicalBaseStandardCredentials extends BaseStand
     private String prefixPath;
     private String namespace;
     private Integer engineVersion;
+
+    @SuppressWarnings("rawtypes")
     private transient ItemGroup context;
 
     AbstractInfisicalBaseStandardCredentials(CredentialsScope scope, String id, String description) {
@@ -60,10 +62,11 @@ public abstract class AbstractInfisicalBaseStandardCredentials extends BaseStand
         this.engineVersion = engineVersion;
     }
 
-    public void setContext(@NonNull ItemGroup context) {
+    public void setContext(@SuppressWarnings("rawtypes") @NonNull ItemGroup context) {
         this.context = context;
     }
 
+    @SuppressWarnings("rawtypes")
     public ItemGroup getContext() {
         return this.context;
     }
