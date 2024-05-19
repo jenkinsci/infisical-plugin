@@ -1,4 +1,3 @@
-
 package io.jenkins.plugins.infisicaljenkins.credentials.common;
 
 import com.cloudbees.plugins.credentials.CredentialsScope;
@@ -7,75 +6,74 @@ import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Util;
 import hudson.model.ItemGroup;
-import java.util.Map;
 import org.kohsuke.stapler.DataBoundSetter;
 
 public abstract class AbstractInfisicalBaseStandardCredentials extends BaseStandardCredentials {
 
-  private String path;
-  private String prefixPath;
-  private String namespace;
-  private Integer engineVersion;
-  private transient ItemGroup context;
+    private String path;
+    private String prefixPath;
+    private String namespace;
+    private Integer engineVersion;
+    private transient ItemGroup context;
 
-  AbstractInfisicalBaseStandardCredentials(CredentialsScope scope, String id, String description) {
-    super(scope, id, description);
-  }
+    AbstractInfisicalBaseStandardCredentials(CredentialsScope scope, String id, String description) {
+        super(scope, id, description);
+    }
 
-  @NonNull
-  public String getPrefixPath() {
-    return prefixPath;
-  }
+    @NonNull
+    public String getPrefixPath() {
+        return prefixPath;
+    }
 
-  @DataBoundSetter
-  public void setPrefixPath(String prefixPath) {
-    this.prefixPath = Util.fixEmptyAndTrim(prefixPath);
-  }
+    @DataBoundSetter
+    public void setPrefixPath(String prefixPath) {
+        this.prefixPath = Util.fixEmptyAndTrim(prefixPath);
+    }
 
-  @NonNull
-  public String getPath() {
-    return path;
-  }
+    @NonNull
+    public String getPath() {
+        return path;
+    }
 
-  @DataBoundSetter
-  public void setPath(String path) {
-    this.path = path;
-  }
+    @DataBoundSetter
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-  @CheckForNull
-  public String getNamespace() {
-    return namespace;
-  }
+    @CheckForNull
+    public String getNamespace() {
+        return namespace;
+    }
 
-  @DataBoundSetter
-  public void setNamespace(String namespace) {
-    this.namespace = Util.fixEmptyAndTrim(namespace);
-  }
+    @DataBoundSetter
+    public void setNamespace(String namespace) {
+        this.namespace = Util.fixEmptyAndTrim(namespace);
+    }
 
-  @CheckForNull
-  public Integer getEngineVersion() {
-    return engineVersion;
-  }
+    @CheckForNull
+    public Integer getEngineVersion() {
+        return engineVersion;
+    }
 
-  @DataBoundSetter
-  public void setEngineVersion(Integer engineVersion) {
-    this.engineVersion = engineVersion;
-  }
+    @DataBoundSetter
+    public void setEngineVersion(Integer engineVersion) {
+        this.engineVersion = engineVersion;
+    }
 
-  public void setContext(@NonNull ItemGroup context) {
-    this.context = context;
-  }
+    public void setContext(@NonNull ItemGroup context) {
+        this.context = context;
+    }
 
-  public ItemGroup getContext() {
-    return this.context;
-  }
+    public ItemGroup getContext() {
+        return this.context;
+    }
 
-  /**
-   * Get credential display name. Defaults to secret path.
-   * 
-   * @return display name
-   */
-  public String getDisplayName() {
-    return this.path;
-  }
+    /**
+     * Get credential display name. Defaults to secret path.
+     *
+     * @return display name
+     */
+    public String getDisplayName() {
+        return this.path;
+    }
 }

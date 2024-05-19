@@ -7,8 +7,8 @@ import hudson.model.ItemGroup;
 
 public abstract class InfisicalConfigResolver implements ExtensionPoint {
 
-  @NonNull
-  public abstract InfisicalConfiguration forJob(@NonNull Item job);
+    @NonNull
+    public abstract InfisicalConfiguration forJob(@NonNull Item job);
 
-  public abstract InfisicalConfiguration getInfisicalConfig(@NonNull ItemGroup<Item> itemGroup);
+    public abstract InfisicalConfiguration getInfisicalConfig(@NonNull ItemGroup<Item> itemGroup);
 }
