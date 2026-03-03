@@ -5,7 +5,7 @@ This plugin adds a build wrapper to set environment variables from [Infisical](h
 ## Infisical Authentication
 
 Authenticating with Infisical is done through the use of [Machine Identities](https://infisical.com/docs/documentation/platform/identities/machine-identities).
-Currently the Jenkins plugin only supports [Universal Auth](https://infisical.com/docs/documentation/platform/identities/universal-auth) for authentication. More methods will be added soon.
+Currently the Jenkins plugin supports [Universal Auth](https://infisical.com/docs/documentation/platform/identities/universal-auth)  and [LDAP Auth](https://infisical.com/docs/documentation/platform/identities/ldap-auth) for authentication. More methods will be added soon.
 
 ### How does Universal Auth work?
 To use Universal Auth, you'll need to create a new Credential _(Infisical Universal Auth Credential)_. The credential should contain your Universal Auth client ID, and your Universal Auth client secret.
@@ -24,7 +24,18 @@ The `ID` and `Description` field doesn't matter much in this case, as they won't
 
 ![Infisical Universal Auth Credential](docs/images/universal-auth-credential.png)
 
+### How does LDAP Auth work?
+To use LDAP Auth, you'll need to create a new Credential _(Infisical LDAP Auth Credential)_.  The credential should contain your IdentityId, LDAP username, and LDAP password.
+Please [read more here](https://infisical.com/docs/documentation/platform/identities/ldap-auth) on how to setup a Machine Identity to use LDAP authentication.
 
+
+### Creating an LDAP credential
+
+Simply navigate to `Dashboard -> Manage Jenkins -> Credentials -> System -> Global credentials (unrestricted)`.
+
+Press the `Add Credentials` button and select `Infisical LDAP Credential` in the `Kind` field.
+
+The `ID` and `Description` field doesn't matter much in this case, as they won't be read anywhere. The description field will be displayed as the credential name during the plugin configuration.
 
 ## Plugin Usage
 ### Configuration
@@ -106,3 +117,100 @@ node {
 }
 ```
 
+## Configuration as Code
+
+The Jenkins Configuration as Code plugin ([JCasC](https://github.com/casz/configuration-as-code-plugin)) allows you to configure Jenkins via a yaml file.
+
+Using this plugin, you can reference Infisical secrets in your JCasC yaml files.
+
+### Prerequisite: 
+Install 'Configuration as Code' Plugin on your Jenkins instance.
+
+Refer to [Installing a new plugin in Jenkins](https://jenkins.io/doc/book/managing/plugins/#installing-a-plugin).
+
+### Infisical Vault Plugin as a Secret Source for JCasC
+
+The JCasC plugin allows you to configure Infisical Jenkins credentials in the yaml configuration file and also allows you to reference secrets throughout the yaml file via string interpolation.
+
+### JCasC config for Jenkins Credentials
+
+JCasC can be used to create the Universal Auth and LDAP Authentication credentials which are used to look up secrets from Infisical.
+
+The secrets can be defined in the yaml file like so:
+
+```yaml
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - infisicalLdapCredential:
+              description: "Infisical LDAP Credential"
+              id: "infisical-ldap-credential"
+              identityId: "jenkins_identity_id"
+              password: "secret123!"
+              username: "infisical_username"
+              scope: SYSTEM
+          - infisicalUniversalAuthCredential:
+              description: "Infisical Universal Auth Credential"
+              id: "infisical-universal-auth-credential"
+              machineIdentityClientId: "machine_identity_client_id"
+              machineIdentityClientSecret: "machine_identity_client_secret"
+              scope: SYSTEM
+```
+
+### JCasC Infisical string interpolation in yaml file
+
+Note that the above example contains secret values stored in clear text.  This can be avoided by using string interpolation to replace the secret values from Infisical at load time.
+
+JCasC will need to access Infisical in order to perform the lookups for string interpolation.
+The connection information is provided via the following environment variables which must be present during Jenkins startup.
+
+General Variables:
+* CASC_INFISICAL_FILE: (Optional) Location of file which contains the environment variables (alternate way of providing variable values)
+* CASC_INFISICAL_URL: (Optional) URL for connecting to Infisical.  Defaults to https://app.infisical.com
+* CASC_INFISICAL_INCLUDE_IMPORTS: (Optional) Should imported secrets be processed? (defaults to FALSE)
+* CASC_INFISICAL_ENVIRONMENT_SLUG: Environment slug to pull secrets for.
+* CASC_INFISICAL_PROJECT_SLUG:  Project slug containing secrets.
+* CASC_INFISICAL_RECURSIVE:  (Optional) Should secrets from subfolders of CASC_INFISICAL_PATHS be retrieved? (defaults to FALSE)
+* CASC_INFISICAL_PATHS:  Comma delimited ist of paths to search for secrets in.  Only secrets in these folders will be retrieved for lookup.
+
+Universal Authentication Variables:
+* CASC_INFISICAL_MACHINE_IDENTITY_CLIENT_ID: Machine Identity Client Id used to authenticated with Infisical
+* CASC_INFISICAL_MACHINE_IDENTITY_CLIENT_SECRET: Machine Identity Client Secret used
+
+LDAP Authentication Variables:
+* CASC_INFISICAL_LDAP_IDENTITY_ID: Identity ID for the machine id
+* CASC_INFISICAL_LDAP_USER: LDAP username associated with the machine id
+* CASC_INFISICAL_LDAP_PW: Password for the LDAP user
+
+Optional CASC_INFISICAL_FILE can be used to pass secrets via file instead of environment variables.  The file should be formatted like so:
+
+```properties
+CASC_INFISICAL_URL=https://app.infisical.com
+CASC_INFISICAL_ENVIRONMENT_SLUG=prod
+CASC_INFISICAL_PROJECT_SLUG=myproject
+CASC_INFISICAL_PATHS=/secrets/jenkins,/secrets/otherpath
+CASC_INFISICAL_LDAP_IDENTITY_ID=70ee8db9-8e15-4022-92c1-0d46232ebf82
+CASC_INFISICAL_LDAP_USER=username
+CASC_INFISICAL_LDAP_PW=secret123!
+```
+
+### Referencing Infisical secrets in JCasC yaml
+
+To use string interpolation to replace secrets in the JCasC yaml file reference them with ${} notation.
+
+In this example the secret values will be pulled from Infisical as long as the environment variables are configured:
+```yaml
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              description: "Database Credentials"
+              id: "database-credential"
+              password: "${DATABASE_PASSWORD}"
+              username: "${DATABASE_USERNAME}"
+              scope: GLOBAL 
+```
+
+In the above example the "password" value would be pulled from Infisical in secrets named DATABASE_PASSWORD and DATABASE_USERNAME.

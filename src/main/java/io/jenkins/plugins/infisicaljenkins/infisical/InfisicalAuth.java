@@ -14,6 +14,45 @@ import org.json.JSONObject;
 
 public class InfisicalAuth implements Serializable {
 
+    public String loginWithLdapAuth(String infisicalUrl, String identityId, String username, String password) {
+        HttpsURLConnection connection = null;
+        try {
+            URL url = new URL(infisicalUrl + "/api/v1/auth/ldap-auth/login");
+            connection = (HttpsURLConnection) url.openConnection();
+
+            // Set request method to POST
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            // Set headers
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+
+            // Create JSON body
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("identityId", identityId);
+            jsonBody.put("username", username);
+            jsonBody.put("password", password);
+            String jsonInputString = jsonBody.toString();
+
+            // Send request
+            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+                wr.write(jsonInputString.getBytes(StandardCharsets.UTF_8));
+            }
+
+            String accessToken = getTokenFromConnection(connection);
+            return String.format("Bearer %s", accessToken);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            throw new InfisicalPluginException(ex.getMessage());
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
     public String loginWithUniversalAuth(
             String infisicalUrl, String machineIdentityClientId, String machineIdentityClientSecret) {
         HttpsURLConnection connection = null;
@@ -41,29 +80,50 @@ public class InfisicalAuth implements Serializable {
                 wr.write(jsonInputString.getBytes(StandardCharsets.UTF_8));
             }
 
-            // Check response code
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                BufferedReader in =
-                        new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            String accessToken = getTokenFromConnection(connection);
+            return String.format("Bearer %s", accessToken);
 
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                // Parse the response using org.json
-                JSONObject jsonResponse = new JSONObject(response.toString());
-                String accessToken = jsonResponse.getString("accessToken"); // Extract the access token
-
-                return String.format("Bearer %s", accessToken);
-            } else {
-                throw new InfisicalPluginException(
-                        "Failed to authenticate with Infisical. Response code: " + responseCode);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            throw new InfisicalPluginException(ex.getMessage());
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
             }
+        }
+    }
+
+    private String getTokenFromConnection(HttpURLConnection connection) throws InfisicalPluginException, IOException {
+        // Check response code
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            BufferedReader in =
+                    new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // Parse the response using org.json
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            return jsonResponse.getString("accessToken"); // Extract the access token
+        } else {
+            throw new InfisicalPluginException("Failed to authenticate with Infisical. Response code: " + responseCode);
+        }
+    }
+
+    public void revoke(String infisicalUrl, String token) {
+        HttpsURLConnection connection = null;
+        try {
+            URL url = new URL(infisicalUrl + "/api/v1/auth/token/revoke");
+            connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+
         } catch (IOException ex) {
             ex.printStackTrace();
             throw new InfisicalPluginException(ex.getMessage());

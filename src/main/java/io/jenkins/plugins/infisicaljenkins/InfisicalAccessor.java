@@ -61,7 +61,12 @@ public class InfisicalAccessor implements Serializable {
 
         // Fetch all secrets in the project, environment, and path
         List<SingleSecretResponse> allSecretsInPath = InfisicalSecrets.getSecrets(
-                configuration, this.credential, infisicalSecret.getPath(), infisicalSecret.getIncludeImports(), logger);
+                configuration,
+                this.credential,
+                infisicalSecret.getPath(),
+                infisicalSecret.getIncludeImports(),
+                false,
+                logger);
 
         logger.printf("Found %d secrets in path: %s%n", allSecretsInPath.size(), infisicalSecret.getPath());
 

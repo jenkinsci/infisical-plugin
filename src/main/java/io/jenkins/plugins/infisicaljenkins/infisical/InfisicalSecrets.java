@@ -25,6 +25,7 @@ public class InfisicalSecrets implements Serializable {
             InfisicalCredential credential,
             String secretPath,
             boolean includeImports,
+            boolean recursive,
             PrintStream logger) {
 
         String accessToken;
@@ -39,13 +40,14 @@ public class InfisicalSecrets implements Serializable {
         try {
             // Updated to include the secretPath as a query parameter
             String urlString = String.format(
-                    "%s%s?secretPath=%s&workspaceSlug=%s&environment=%s&expandSecretReferences=true&include_imports=%s",
+                    "%s%s?secretPath=%s&workspaceSlug=%s&environment=%s&expandSecretReferences=true&include_imports=%s&recursive=%s",
                     configuration.getInfisicalUrl(),
                     "/api/v3/secrets/raw",
                     URLEncoder.encode(secretPath, "UTF-8"),
                     configuration.getInfisicalProjectSlug(),
                     configuration.getInfisicalEnvironmentSlug(),
-                    includeImports ? "true" : "false");
+                    includeImports ? "true" : "false",
+                    recursive ? "true" : "false");
 
             logger.println("Fetching secrets from Infisical at: " + urlString);
 

@@ -8,14 +8,15 @@ import io.jenkins.plugins.infisicaljenkins.configuration.InfisicalConfiguration;
 import io.jenkins.plugins.infisicaljenkins.exception.InfisicalPluginException;
 import io.jenkins.plugins.infisicaljenkins.infisical.InfisicalAuth;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 public class InfisicalUniversalAuthCredential extends AbstractAuthenticatingInfisicalTokenCredential {
 
     @NonNull
-    private final String machineIdentityClientId;
+    private String machineIdentityClientId;
 
     @NonNull
-    private final String machineIdentityClientSecret;
+    private String machineIdentityClientSecret;
 
     private final InfisicalAuth infisicalAuth;
 
@@ -40,6 +41,16 @@ public class InfisicalUniversalAuthCredential extends AbstractAuthenticatingInfi
     @NonNull
     public String getMachineIdentityClientSecret() {
         return machineIdentityClientSecret;
+    }
+
+    @DataBoundSetter
+    public void setMachineIdentityClientId(String machineIdentityClientId) {
+        this.machineIdentityClientId = machineIdentityClientId;
+    }
+
+    @DataBoundSetter
+    public void setMachineIdentityClientSecret(String machineIdentityClientSecret) {
+        this.machineIdentityClientSecret = machineIdentityClientSecret;
     }
 
     public String getAccessToken(InfisicalConfiguration configuration) {
