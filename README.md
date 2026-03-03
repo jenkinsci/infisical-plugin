@@ -11,7 +11,6 @@ Currently the Jenkins plugin supports [Universal Auth](https://infisical.com/doc
 To use Universal Auth, you'll need to create a new Credential _(Infisical Universal Auth Credential)_. The credential should contain your Universal Auth client ID, and your Universal Auth client secret.
 Please [read more here](https://infisical.com/docs/documentation/platform/identities/universal-auth) on how to setup a Machine Identity to use universal auth.
 
-
 ### Creating a Universal Auth credential
 
 Creating a universal auth credential inside Jenkins is very straight forward.
