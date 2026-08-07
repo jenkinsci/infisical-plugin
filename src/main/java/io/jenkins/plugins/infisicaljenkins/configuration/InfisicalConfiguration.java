@@ -5,6 +5,7 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.cloudbees.plugins.credentials.domains.URIRequirementBuilder;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.Util;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.model.Item;
@@ -14,7 +15,6 @@ import io.jenkins.plugins.infisicaljenkins.credentials.InfisicalCredential;
 import io.jenkins.plugins.infisicaljenkins.exception.InfisicalPluginException;
 import java.io.Serializable;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -74,13 +74,13 @@ public class InfisicalConfiguration extends AbstractDescribableImpl<InfisicalCon
             return this;
         }
         InfisicalConfiguration result = new InfisicalConfiguration(this);
-        if (StringUtils.isBlank(result.getInfisicalEnvironmentSlug())) {
+        if (Util.fixEmptyAndTrim(result.getInfisicalEnvironmentSlug()) == null) {
             result.setInfisicalEnvironmentSlug(parent.getInfisicalEnvironmentSlug());
         }
-        if (StringUtils.isBlank(result.getInfisicalProjectSlug())) {
+        if (Util.fixEmptyAndTrim(result.getInfisicalProjectSlug()) == null) {
             result.setInfisicalProjectSlug(parent.getInfisicalProjectSlug());
         }
-        if (StringUtils.isBlank(result.getInfisicalUrl())) {
+        if (Util.fixEmptyAndTrim(result.getInfisicalUrl()) == null) {
             result.setInfisicalUrl(parent.getInfisicalUrl());
         }
 
