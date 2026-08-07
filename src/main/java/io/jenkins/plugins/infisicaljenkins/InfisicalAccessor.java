@@ -6,6 +6,7 @@ import com.cloudbees.plugins.credentials.CredentialsUnavailableException;
 import com.cloudbees.plugins.credentials.matchers.IdMatcher;
 import hudson.EnvVars;
 import hudson.ExtensionList;
+import hudson.Util;
 import hudson.model.Run;
 import hudson.security.ACL;
 import io.jenkins.plugins.infisicaljenkins.configuration.InfisicalConfigResolver;
@@ -24,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jenkins.model.Jenkins;
-import org.apache.commons.lang.StringUtils;
 
 public class InfisicalAccessor implements Serializable {
 
@@ -100,7 +100,7 @@ public class InfisicalAccessor implements Serializable {
         InfisicalConfiguration config = pullAndMergeConfiguration(run, initialConfiguration);
         String url = config.getInfisicalUrl();
 
-        if (StringUtils.isBlank(url)) {
+        if (Util.fixEmptyAndTrim(url) == null) {
             throw new InfisicalPluginException(
                     "The infisical url was not configured - please specify the infisical url to use.");
         }
@@ -120,12 +120,12 @@ public class InfisicalAccessor implements Serializable {
                     String environmentVariableKey = fetchedSecret.getSecretKey();
                     String environmentVariableValue = fetchedSecret.getSecretValue();
 
-                    if (StringUtils.isBlank(environmentVariableKey)) {
+                    if (Util.fixEmptyAndTrim(environmentVariableKey) == null) {
                         logger.println("Skipping secret with empty key");
                         continue;
                     }
 
-                    if (StringUtils.isBlank(environmentVariableValue)) {
+                    if (Util.fixEmptyAndTrim(environmentVariableValue) == null) {
                         logger.println("Skipping secret with empty value");
                         continue;
                     }
@@ -164,7 +164,7 @@ public class InfisicalAccessor implements Serializable {
         if (Jenkins.getInstanceOrNull() != null) {
             String id = config.getInfisicalCredentialId();
 
-            if (StringUtils.isBlank(id)) {
+            if (Util.fixEmptyAndTrim(id) == null) {
                 throw new InfisicalPluginException(
                         "The credential id was not configured - please specify the credentials to use.");
             }

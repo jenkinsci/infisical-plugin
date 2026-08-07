@@ -2,6 +2,7 @@ package io.jenkins.plugins.infisicaljenkins.infisical;
 
 import com.cloudbees.plugins.credentials.CredentialsScope;
 import hudson.Extension;
+import hudson.Util;
 import io.jenkins.plugins.casc.SecretSource;
 import io.jenkins.plugins.infisicaljenkins.configuration.InfisicalConfiguration;
 import io.jenkins.plugins.infisicaljenkins.credentials.InfisicalCredential;
@@ -19,7 +20,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
 
 @Extension(optional = true)
 public class InfisicalSecretSource extends SecretSource {
@@ -162,7 +162,7 @@ public class InfisicalSecretSource extends SecretSource {
 
     @Override
     public Optional<String> reveal(String secret) {
-        if (StringUtils.isBlank(secret)) {
+        if (Util.fixEmptyAndTrim(secret) == null) {
             return Optional.empty();
         }
 
