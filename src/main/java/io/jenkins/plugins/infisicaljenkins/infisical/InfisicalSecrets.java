@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import javax.net.ssl.HttpsURLConnection;
 
 public class InfisicalSecrets implements Serializable {
 
@@ -29,7 +28,7 @@ public class InfisicalSecrets implements Serializable {
             PrintStream logger) {
 
         String accessToken;
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
 
         try {
             accessToken = credential.getAccessToken(configuration);
@@ -52,7 +51,7 @@ public class InfisicalSecrets implements Serializable {
             logger.println("Fetching secrets from Infisical at: " + urlString);
 
             URL url = new URL(urlString);
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
 
             // Set request method to GET
             connection.setRequestMethod("GET");
