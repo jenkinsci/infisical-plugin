@@ -14,7 +14,6 @@ import io.jenkins.plugins.infisicaljenkins.credentials.InfisicalCredential;
 import io.jenkins.plugins.infisicaljenkins.exception.InfisicalPluginException;
 import java.io.Serializable;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -74,13 +73,16 @@ public class InfisicalConfiguration extends AbstractDescribableImpl<InfisicalCon
             return this;
         }
         InfisicalConfiguration result = new InfisicalConfiguration(this);
-        if (StringUtils.isBlank(result.getInfisicalEnvironmentSlug())) {
+        String envSlug = result.getInfisicalEnvironmentSlug();
+        String projSlug = result.getInfisicalProjectSlug();
+        String infisicalUrl = result.getInfisicalUrl();
+        if (envSlug == null || envSlug.isBlank()) {
             result.setInfisicalEnvironmentSlug(parent.getInfisicalEnvironmentSlug());
         }
-        if (StringUtils.isBlank(result.getInfisicalProjectSlug())) {
+        if (projSlug == null || projSlug.isBlank()) {
             result.setInfisicalProjectSlug(parent.getInfisicalProjectSlug());
         }
-        if (StringUtils.isBlank(result.getInfisicalUrl())) {
+        if (infisicalUrl == null || infisicalUrl.isBlank()) {
             result.setInfisicalUrl(parent.getInfisicalUrl());
         }
 
