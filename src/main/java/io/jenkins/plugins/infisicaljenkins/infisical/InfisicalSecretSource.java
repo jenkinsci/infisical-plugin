@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
 
 @Extension(optional = true)
 public class InfisicalSecretSource extends SecretSource {
@@ -162,7 +161,7 @@ public class InfisicalSecretSource extends SecretSource {
 
     @Override
     public Optional<String> reveal(String secret) {
-        if (StringUtils.isBlank(secret)) {
+        if (secret == null || secret.isBlank()) {
             return Optional.empty();
         }
 

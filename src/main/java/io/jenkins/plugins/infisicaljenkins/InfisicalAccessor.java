@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jenkins.model.Jenkins;
-import org.apache.commons.lang.StringUtils;
 
 public class InfisicalAccessor implements Serializable {
 
@@ -100,7 +99,7 @@ public class InfisicalAccessor implements Serializable {
         InfisicalConfiguration config = pullAndMergeConfiguration(run, initialConfiguration);
         String url = config.getInfisicalUrl();
 
-        if (StringUtils.isBlank(url)) {
+        if (url == null || url.isBlank()) {
             throw new InfisicalPluginException(
                     "The infisical url was not configured - please specify the infisical url to use.");
         }
@@ -120,12 +119,12 @@ public class InfisicalAccessor implements Serializable {
                     String environmentVariableKey = fetchedSecret.getSecretKey();
                     String environmentVariableValue = fetchedSecret.getSecretValue();
 
-                    if (StringUtils.isBlank(environmentVariableKey)) {
+                    if (environmentVariableKey == null || environmentVariableKey.isBlank()) {
                         logger.println("Skipping secret with empty key");
                         continue;
                     }
 
-                    if (StringUtils.isBlank(environmentVariableValue)) {
+                    if (environmentVariableValue == null || environmentVariableValue.isBlank()) {
                         logger.println("Skipping secret with empty value");
                         continue;
                     }
@@ -164,7 +163,7 @@ public class InfisicalAccessor implements Serializable {
         if (Jenkins.getInstanceOrNull() != null) {
             String id = config.getInfisicalCredentialId();
 
-            if (StringUtils.isBlank(id)) {
+            if (id == null || id.isBlank()) {
                 throw new InfisicalPluginException(
                         "The credential id was not configured - please specify the credentials to use.");
             }
