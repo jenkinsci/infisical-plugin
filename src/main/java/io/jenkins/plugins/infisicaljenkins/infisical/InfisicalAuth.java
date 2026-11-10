@@ -9,16 +9,15 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONObject;
 
 public class InfisicalAuth implements Serializable {
 
     public String loginWithLdapAuth(String infisicalUrl, String identityId, String username, String password) {
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         try {
             URL url = new URL(infisicalUrl + "/api/v1/auth/ldap-auth/login");
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
 
             // Set request method to POST
             connection.setRequestMethod("POST");
@@ -55,11 +54,11 @@ public class InfisicalAuth implements Serializable {
 
     public String loginWithUniversalAuth(
             String infisicalUrl, String machineIdentityClientId, String machineIdentityClientSecret) {
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         try {
             // Create the URL, and append "/api/v1/auth/universal-auth/login" to it
             URL url = new URL(infisicalUrl + "/api/v1/auth/universal-auth/login");
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
 
             // Set request method to POST
             connection.setRequestMethod("POST");
@@ -117,10 +116,10 @@ public class InfisicalAuth implements Serializable {
     }
 
     public void revoke(String infisicalUrl, String token) {
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         try {
             URL url = new URL(infisicalUrl + "/api/v1/auth/token/revoke");
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
 
